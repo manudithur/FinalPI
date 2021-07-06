@@ -21,13 +21,13 @@ int main( int argc, char *argv){
     char* string;
     char* token;
     while(fgets(string,200,miArch)){    //asumimos que como maximo hay 200 caracteres por linea
-        tContent* node= newNode();      //funcion que cree un nuevo nodo
+        tContent* node= newNode();      //funcion que cree un nuevo nodo con sus respectivos mallocs
 
         token=strtok(string,s);         //todavia no entiendo 100% esto del strtok 
-        strcpy(token,node->type);       //pero creo que asi funciona
+        strcpy(node->type,token);       //pero creo que asi funciona
 
         token=strtok(NULL,s);
-        strcpy(token,node->title);
+        strcpy(node->title,token);
 
         token=strtok(NULL,s);
         int aux=atoi(token);
@@ -40,7 +40,7 @@ int main( int argc, char *argv){
             node->endY=aux;
 
         token=strtok(NULL,s);
-        char* finalAux;
+        char* finalAux=malloc(sizeof(char)*50);        //para guardar los dif tipos de generos
         strcpy(finalAux,token);                              
         /* trabajo despues con generos para no afectar el estado interno de strtok */
 
@@ -65,9 +65,10 @@ int main( int argc, char *argv){
         strAux=strtok(finalAux,",");                 //tengo que testear esto del strtok, porque
         int count=0;                                 //no se bien que pasa si uso strtok con otro string
         while(strAux!=NULL){
-            strcpy(strAux,node->genres[count++]);    //se me complica con la parte de generos,
+            strcpy(node->genres[count++],strAux);    //se me complica con la parte de generos,
             strAux=strtok(NULL,",");                 //pero si lo de antes esta bien el resto deberia
         }                                            //ser bastante similar
+        free(finalAux);
 
         
                                                     
