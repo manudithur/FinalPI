@@ -27,7 +27,7 @@ int countType(tContent * firstContent, char * type){
 
     int c = 0;
 
-    tContent aux = firstContent;
+    tContent* aux = firstContent;
     while ( aux != NULL){
         if( strcmp(firstContent->type, type ) == 0 )
             c++;
