@@ -1,6 +1,7 @@
 
 
 typedef struct content {
+    char * tipo;
     char * title;
     char ** genres;
     int startY;
@@ -8,13 +9,12 @@ typedef struct content {
     float rating;
     int runTimeMins;
     int numVotes;
-    struct movie * tail;
+    struct content * tail;
 } tContent;
 
 typedef struct year {
     int year;
-    tContent * firstMovie;
-    tContent * firstSeries;
+    tContent * firstContent;
     int countMovies;
     int countSeries;
     struct year * tail;
