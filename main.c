@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "movieSeriesADT.h"
+#include "movieSeriesADT.c"   //hay q incluir el .h 
 
 int main( int argc, char *argv){
     
@@ -24,7 +24,7 @@ int main( int argc, char *argv){
         tContent* node= newNode();      //funcion que cree un nuevo nodo
 
         token=strtok(string,s);         //todavia no entiendo 100% esto del strtok 
-        strcpy(token,node->tipo);       //pero creo que asi funciona
+        strcpy(token,node->type);       //pero creo que asi funciona
 
         token=strtok(NULL,s);
         strcpy(token,node->title);
@@ -40,8 +40,29 @@ int main( int argc, char *argv){
             node->endY=aux;
 
         token=strtok(NULL,s);
+        char* finalAux;
+        strcpy(finalAux,token);                              
+        /* trabajo despues con generos para no afectar el estado interno de strtok */
+
+        token=strtok(NULL,s);
+        aux=atof(token);
+        node->rating=aux;
+
+        token=strtok(NULL,s);
+        aux=atoi(token);
+        node->numVotes=aux;
+
+        token=strtok(NULL,s);
+        if((aux=atoi(token))==0)
+            node->runTimeMins=-1;
+        else
+            node->runTimeMins=aux;
+
+
+
+
         char* strAux;
-        strAux=strtok(token,",");                    //tengo que testear esto del strtok, porque
+        strAux=strtok(finalAux,",");                 //tengo que testear esto del strtok, porque
         int count=0;                                 //no se bien que pasa si uso strtok con otro string
         while(strAux!=NULL){
             strcpy(strAux,node->genres[count++]);    //se me complica con la parte de generos,

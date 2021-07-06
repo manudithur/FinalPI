@@ -8,7 +8,7 @@ typedef struct content {
     int startY;
     int endY;
     float rating;
-    unsigned int runTimeMins;
+    int runTimeMins;
     unsigned int numVotes;
     struct content * tail;
 } tContent;
