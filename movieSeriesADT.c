@@ -17,12 +17,12 @@ typedef struct content {
 typedef struct year {
     int year;
     tContent * firstContent;
-    tContent * currYear;
     struct year * tail;
 } tYear;
 
 typedef struct movieSeriesCDT {
     tYear * vecYears;
+    tContent * currYear;
 } movieSeriesCDT;
 
 int countType(tContent * firstContent, char * type){
@@ -59,7 +59,7 @@ int countGenre(tContent * firstContent, char * genre){
     return c;
 }
 
-void maxType (tYear * movieSeries, char * tipo, char * nombre, int * votes, float * rating) {
+void maxType (movieSeriesADT movieSeries, char * tipo, char * nombre, int * votes, float * rating) {
     tYear * year = movieSeries->currYear;
     tContent * aux = maxVotes(year->firstContent,tipo);
     nombre = malloc(strlen(aux->title)+1);
@@ -69,8 +69,10 @@ void maxType (tYear * movieSeries, char * tipo, char * nombre, int * votes, floa
 }
 
 tContent * maxVotes (tContent * list, char * tipo) {
+
     tContent * ans, * aux = list;
     int max = 0;
+    aux = list;
 
     while (aux != NULL) {
         if (strcmp(tipo, aux->type) == 0)
@@ -81,5 +83,7 @@ tContent * maxVotes (tContent * list, char * tipo) {
 
         aux = aux->tail;
     }
+    
     return ans;
+
 }
