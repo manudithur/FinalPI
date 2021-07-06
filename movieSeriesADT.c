@@ -27,9 +27,9 @@ int countType(tContent * firstContent, char * type){
 
     int c = 0;
 
-    tContent* aux = firstContent;
+    tContent * aux = firstContent;
     while ( aux != NULL){
-        if( strcmp(firstContent->type, type ) == 0 )
+        if( strcmp(AUX->type, type ) == 0 )
             c++;
         aux = aux->tail;
     }
@@ -57,7 +57,25 @@ int countGenre(tContent * firstContent, char * genre){
     return c;
 }
 
-void mostVotesPerType(tContent * firstContent, char * type, char * MaxTitle, unsigned int * MaxVotes, float * MaxRating);
+void maxTipo (movieSeriesADT movieSeries, char * tipo, char * nombre, int * votes, float * rating) {
+    tYear * year = movieSeries->currYear;
+    tContent * aux = maxVotes(year->firstContent,tipo);
+    nombre = malloc(strlen(aux->title)+1);
+    strcpy(nombre,aux->title);
+    *votes = aux->votes;
+    *rating = aux->rating;
+}
 
-
-hola
+tContent * maxVotes (tContent * list, char * tipo) {
+    tContent * ans, * aux = list;
+    int max = 0;
+    while (aux != NULL) {
+        if (strcmp(tipo, aux->tipo) == 0)
+            if (aux->votes > max) {
+                max = aux->votes;
+                ans = aux;
+            }
+        aux = aux->tail;
+    }
+    return ans;
+}
