@@ -20,6 +20,7 @@ int main( int argc, char *argv){
     const char s[2]=";";
     char* string;
     char* token;
+    char* n=fgets(string,200,miArch);   //para "saltear" la primer linea
     while(fgets(string,200,miArch)){    //asumimos que como maximo hay 200 caracteres por linea
         tContent* node= newNode();      //funcion que cree un nuevo nodo con sus respectivos mallocs
 
