@@ -15,8 +15,6 @@ typedef struct content {
 typedef struct year {
     int year;
     tContent * firstContent;
-    int countMovies;
-    int countSeries;
     struct year * tail;
 } tYear;
 
