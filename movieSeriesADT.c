@@ -38,8 +38,26 @@ int countType(tContent * firstContent, char * type){
 
 }
 
-int countGenre(tContent * firstContent, char * genre);
+int countGenre(tContent * firstContent, char * genre){
+        int c = 0;
+
+    tContent aux = firstContent;
+    int flag = 0;
+    while ( aux != NULL){
+        for( int i = 0 ; firstContent->genres[i] && !flag ; i++ ){
+            if( strcmp(firstContent->genres[i], genre) == 0 ){
+                c++;
+                flag = 1;
+            }
+        }
+        aux = aux->tail;
+        flag = 0;
+    }
+
+    return c;
+}
 
 void mostVotesPerType(tContent * firstContent, char * type, char * MaxTitle, unsigned int * MaxVotes, float * MaxRating);
 
 
+hola
