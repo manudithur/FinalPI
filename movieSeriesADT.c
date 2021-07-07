@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "movieSeriesADT.h"
 
 typedef struct content {            //Lista para los contenidos. Se consideran por igual series y peliculas.
@@ -12,7 +13,7 @@ typedef struct content {            //Lista para los contenidos. Se consideran p
 typedef struct genre{              //Lista de los generos
     char * genre;                  //Se van a guardar en orden alfabetico
     unsigned int count;
-    tGenre * tail;
+    struct genre * tail;
 }tGenre;
 
 typedef struct year {               //Lista de los anios de mayor a menor
@@ -31,35 +32,73 @@ typedef struct movieSeriesCDT {
     tYear * currYear;               //Puntero al nodo actual de trabajo (iterador)
 } movieSeriesCDT;
 
+//Esta funcion paso el testeo 2021-07-07 17:03:40
 
 tYear * searchOrAddYear(movieSeriesADT adt, int year){
-    tYear * found;
-    adt->firstYear = addYearREC(adt->firstYear, year, found);
+    tYear * found = NULL;
+    adt->firstYear = addYearREC(adt->firstYear, year, &found);
     return found;
 }
 
-tYear * addYearREC(tYear * first, int year, tYear * newNode){
+//Esta funcion paso el testeo 2021-07-07 17:03:40
+tYear * addYearREC(tYear * first, int year, tYear ** newNode){
 
-    int c = first->year - year;
-
-    if( first == NULL || c < 0 ){
+    int c;
+    if( first == NULL || (c = first->year - year) < 0 ){
         tYear * new = malloc(sizeof(tYear));
         if(new == NULL)
-            exit;
+            exit(1);
         new->year = year;
         new->movieCount = 0;
         new->seriesCount = 0;
         new->tail = first;
-        newNode = new;
+        *newNode = new;
         return new;
     }
-
     if( c > 0 )
         first->tail = addYearREC(first->tail, year, newNode);
-    if(c==0){
-        newNode = first;
+    if(c == 0)
+        *newNode = first;
     return first;
 }
+
+void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes ){
+    int flag = 0;
+    tYear * year = searchOrAddYear(adt, year);
+    int c;
+    if((c=strcmp(type, "movie"))==0){
+        addContentREC(year->firstMovie, title, rating, votes, &flag);
+        year->movieCount += flag;
+    }
+    else if((c=strcmp(type, "tvSeries"))==0){
+        addContentREC(year->firstSeries, title, rating, votes, &flag);
+        year->seriesCount += flag;
+    }
+    return;
+}
+
+tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes int * flag ){
+    int c;
+    if(first == NULL || (c=first->numVotes - votes) < 0 ){
+        tContent * new = malloc(sizeof(tContent));
+        if (new == NULL)
+            exit(1);
+        new->title = malloc(strlen(title)+1);
+        strcpy(new->title, title);
+        new->rating = rating
+        new->numVotes = votes;
+        new->tail = first;
+        *flag = 1;
+        return new;
+    }
+    if(c>0)
+        first->tail = addContentREC(first->tail, title, rating, votes, flag);
+    if(c == 0)
+        return first;
+    return first;
+}
+
+void addGenre(movieSeriesADT adt)
 
 //De aca para abajo falta rehacerlo con la nueva estructura.
 
