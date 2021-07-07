@@ -101,85 +101,6 @@ tContent * addContentREC(tContent * first, char * title, float rating, unsigned 
 
 void addGenre(movieSeriesADT adt)
 
-//De aca para abajo falta rehacerlo con la nueva estructura.
-
-void maxType (movieSeriesADT movieSeries, char * tipo, char * nombre, int * votes, float * rating) {
-    tYear * year = movieSeries->currYear;
-    tContent * aux = maxVotes(year->firstContent,tipo);
-    nombre = malloc(strlen(aux->title)+1);
-    strcpy(nombre,aux->title);
-    *votes = aux->numVotes;
-    *rating = aux->rating;
-}
-
-tContent * maxVotes (tContent * list, char * tipo) {
-
-    tContent * ans, * aux = list;
-    int max = 0;
-    aux = list;
-
-    while (aux != NULL) {
-        if (strcmp(tipo, aux->type) == 0)
-            if (aux->numVotes > max) {
-                max = aux->numVotes;
-                ans = aux;
-            }
-
-        aux = aux->tail;
-    }
-    
-    return ans;
-
-}
-
-void freeRecContent(tContent * list){
-    if(list == NULL)
-        return;
-    freeRecContent(list->tail);
-    free(list->title);
-    free(list->type);
-    for(int i = 0 ; list->genres[i] != NULL ; i++)
-        free(list->genres[i]);
-    free(list->genres);
-    free(list);
-}
-
-void freeYearsRec(tYear * first){
-    if(first == NULL)
-        return;
-    freeYearsRec(first->tail);
-    freeRecContent(first->firstContent);
-    free(first);
-}
-
-void free(movieSeriesADT movieSeries){
-    freeYearsRec(movieSeries->vecYears);
-    free(movieSeries);
-}
-
-void toBeginYear(movieSeriesADT movieSeries){
-    movieSeries->currYear =movieSeries->vecYears;
-}
-
-int hasNextYear(movieSeriesADT movieSeries){
-    return movieSeries->currYear != NULL;
-}
-
-void nextYear(movieSeriesADT movieSeries){
-    movieSeries->currYear = movieSeries->currYear->tail;
-}
-//Controladores del iterador de genre
-void toBeginGenre(movieSeriesADT movieSeries) {
-    movieSeries->currYear->currGenre = movieSeries->currYear->firstGenre;
-}
-
-int hasNextGenre(movieSeriesADT movieSeries) {
-    return movieSeries->currYear->currGenre != NULL;
-}
-
-void nextGenre(movieSeriesADT movieSeries) {
-    movieSeries->currYear->currGenre = movieSeries->currYear->currGenre->tail;
-=======
 movieSeriesADT newMovieSeries () {
     return calloc(1,sizeof(movieSeriesCDT));
 }
@@ -187,7 +108,6 @@ movieSeriesADT newMovieSeries () {
 //Funciones para query1
 int currYear(movieSeriesADT movieSeries) {
     return movieSeries->currYear->year;
->>>>>>> Stashed changes
 }
 
 int currYearMovieCount(movieSeriesADT movieSeries) {
@@ -213,7 +133,6 @@ int currGenreCount(movieSeriesADT movieSeries) {
 }
 
 //Funciones para query3
-
 //si estan desordenadas
 static tContent * findMostVotes(tContent * list) {
     int max = 0;
@@ -250,12 +169,6 @@ void _mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, flo
     *rating = aux->rating;
 }
 
-<<<<<<< Updated upstream
-//Funciones para query1
-int currYear(movieSeriesADT movieSeries) {
-    return movieSeries->currYear->year;
-}
-=======
 //teniendo en cuenta que las movies y series estan ordenadas de mas votos a menos
 void mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
     char * title = malloc(strlen(movieSeres->currYear->firstMovie->title)+1);
@@ -275,32 +188,6 @@ void mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, floa
     *name = title;
     *votes = movieSeries->currYear->firstSeries->numVotes;
     *rating = movieSeries->currYear->firstSeries->rating;
-}
-
-//Funciones que liberan recursos
-static void freeRecContent(tContent * list){
-    if(list == NULL)
-        return;
-    freeRecContent(list->tail);
-    free(list->title);
-    free(list->type);
-    for(int i = 0 ; list->genres[i] != NULL ; i++)
-        free(list->genres[i]);
-    free(list->genres);
-    free(list);
-}
-
-static void freeYearsRec(tYear * first){
-    if(first == NULL)
-        return;
-    freeYearsRec(first->tail);
-    freeRecContent(first->firstContent);
-    free(first);
-}
-
-void free(movieSeriesADT movieSeries){
-    freeYearsRec(movieSeries->vecYears);
-    free(movieSeries);
 }
 
 //Controladores del iterador de year
@@ -328,4 +215,3 @@ int hasNextGenre(movieSeriesADT movieSeries) {
 void nextGenre(movieSeriesADT movieSeries) {
     movieSeries->currYear->currGenre = movieSeries->currYear->currGenre->tail;
 }
->>>>>>> Stashed changes
