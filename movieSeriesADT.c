@@ -63,22 +63,24 @@ tYear * addYearREC(tYear * first, int year, tYear ** newNode){
     return first;
 }
 
+//Esta funcion paso el teesteo el 2021-07-07 18:20:17
 void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes ){
     int flag = 0;
-    tYear * year = searchOrAddYear(adt, year);
+    tYear * currYear = searchOrAddYear(adt, year);
     int c;
     if((c=strcmp(type, "movie"))==0){
-        addContentREC(year->firstMovie, title, rating, votes, &flag);
-        year->movieCount += flag;
+        currYear->firstMovie = addContentREC(currYear->firstMovie, title, rating, votes, &flag);
+        printf("  --  Lo agregue\n");
+        currYear->movieCount += flag;
     }
     else if((c=strcmp(type, "tvSeries"))==0){
-        addContentREC(year->firstSeries, title, rating, votes, &flag);
-        year->seriesCount += flag;
+        currYear->firstSeries = addContentREC(currYear->firstSeries, title, rating, votes, &flag);
+        currYear->seriesCount += flag;
     }
     return;
 }
 
-tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes int * flag ){
+tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag ){
     int c;
     if(first == NULL || (c=first->numVotes - votes) < 0 ){
         tContent * new = malloc(sizeof(tContent));
@@ -86,20 +88,17 @@ tContent * addContentREC(tContent * first, char * title, float rating, unsigned 
             exit(1);
         new->title = malloc(strlen(title)+1);
         strcpy(new->title, title);
-        new->rating = rating
+        new->rating = rating;
         new->numVotes = votes;
         new->tail = first;
+        printf("Llegue al rec");
         *flag = 1;
         return new;
     }
-    if(c>0)
+    else
         first->tail = addContentREC(first->tail, title, rating, votes, flag);
-    if(c == 0)
-        return first;
     return first;
 }
-
-void addGenre(movieSeriesADT adt)
 
 movieSeriesADT newMovieSeries () {
     return calloc(1,sizeof(movieSeriesCDT));
