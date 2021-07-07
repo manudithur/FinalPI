@@ -15,10 +15,6 @@ typedef struct genre{              //Lista de los generos
     tGenre * tail;
 }tGenre;
 
-tGenre * increaseIfNotCreate(tGenre * firstGenre, char * genre){
-
-}
-
 typedef struct year {               //Lista de los anios de mayor a menor
     int year;
     tContent * firstMovie;          //Puntero al primer nodo de la lista de movies.
@@ -93,14 +89,14 @@ void free(movieSeriesADT movieSeries){
     free(movieSeries);
 }
 
-void toBegin(movieSeriesADT movieSeries){
+void toBeginYear(movieSeriesADT movieSeries){
     movieSeries->currYear =movieSeries->vecYears;
 }
 
-int hasNext(movieSeriesADT movieSeries){
+int hasNextYear(movieSeriesADT movieSeries){
     return movieSeries->currYear != NULL;
 }
 
-void next(movieSeriesADT movieSeries){
+void nextYear(movieSeriesADT movieSeries){
     movieSeries->currYear = movieSeries->currYear->tail;
 }
