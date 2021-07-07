@@ -22,7 +22,7 @@ typedef struct year {
 
 typedef struct movieSeriesCDT {
     tYear * vecYears;
-    tContent * currYear;
+    tYear * currYear;
 } movieSeriesCDT;
 
 int countType(tContent * firstContent, char * type){
@@ -86,4 +86,41 @@ tContent * maxVotes (tContent * list, char * tipo) {
     
     return ans;
 
+}
+
+void freeRecContent(tContent * list){
+    if(list == NULL)
+        return;
+    freeRecContent(list->tail);
+    free(list->title);
+    free(list->type);
+    for(int i = 0 ; list->genres[i] != NULL ; i++)
+        free(list->genres[i]);
+    free(list->genres);
+    free(list);
+}
+
+void freeYearsRec(tYear * first){
+    if(first == NULL)
+        return;
+    freeYearsRec(first->tail);
+    freeRecContent(first->firstContent);
+    free(first);
+}
+
+void free(movieSeriesADT movieSeries){
+    freeYearsRec(movieSeries->vecYears);
+    free(movieSeries);
+}
+
+void toBegin(movieSeriesADT movieSeries){
+    movieSeries->currYear =movieSeries->vecYears;
+}
+
+int hasNext(movieSeriesADT movieSeries){
+    return movieSeries->currYear != NULL;
+}
+
+void next(movieSeriesADT movieSeries){
+    movieSeries->currYear = movieSeries->currYear->tail;
 }
