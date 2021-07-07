@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "movieSeriesADT.h"
 
 typedef struct content {            //Lista para los contenidos. Se consideran por igual series y peliculas.
@@ -31,39 +32,6 @@ typedef struct movieSeriesCDT {
     tYear * currYear;               //Puntero al nodo actual de trabajo (iterador)
 } movieSeriesCDT;
 
-
-
-//De aca para abajo falta rehacerlo con la nueva estructura.
-
-void maxType (movieSeriesADT movieSeries, char * tipo, char * nombre, int * votes, float * rating) {
-    tYear * year = movieSeries->currYear;
-    tContent * aux = maxVotes(year->firstContent,tipo);
-    nombre = malloc(strlen(aux->title)+1);
-    strcpy(nombre,aux->title);
-    *votes = aux->numVotes;
-    *rating = aux->rating;
-}
-
-tContent * maxVotes (tContent * list, char * tipo) {
-
-    tContent * ans, * aux = list;
-    int max = 0;
-    aux = list;
-
-    while (aux != NULL) {
-        if (strcmp(tipo, aux->type) == 0)
-            if (aux->numVotes > max) {
-                max = aux->numVotes;
-                ans = aux;
-            }
-
-        aux = aux->tail;
-    }
-    
-    return ans;
-
-}
-
 //Funciones para query1
 int currYear(movieSeriesADT movieSeries) {
     return movieSeries->currYear->year;
@@ -81,7 +49,7 @@ int currYearSeriesCount(movieSeriesADT movieSeries) {
 char * currGenre(movieSeriesADT movieSeries) {
     char * ans = malloc(strlen(movieSeries->currYear->currGenre->genre) + 1);
     if (ans == NULL)
-        exit(1); //IMPORTANT como lidiamos con falta de mem?
+        exit(1);
     strcpy(ans,movieSeries->currYear->currGenre->genre);
     return ans;
 }
@@ -107,6 +75,8 @@ static tContent * findMostVotes(tContent * list) {
 void mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
     tContent * aux = findMostVotes(movieSeries->currYear->firstMovie);
     char * title = malloc(strlen(aux->title)+1);
+    if (title == NULL)
+        exit(1);
     strcpy(title,aux->title);
     *name = title;
     *votes = aux->numVotes;
@@ -116,6 +86,8 @@ void mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float
 void mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
     tContent * aux = findMostVotes(movieSeries->currYear->firstSeries);
     char * title = malloc(strlen(aux->title)+1);
+    if (title == NULL)
+        exit(1);
     strcpy(title,aux->title);
     *name = title;
     *votes = aux->numVotes;
