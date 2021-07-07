@@ -32,6 +32,34 @@ typedef struct movieSeriesCDT {
 } movieSeriesCDT;
 
 
+tYear * searchOrAddYear(movieSeriesADT adt, int year){
+    tYear * found;
+    adt->firstYear = addYearREC(adt->firstYear, year, found);
+    return found;
+}
+
+tYear * addYearREC(tYear * first, int year, tYear * newNode){
+
+    int c = first->year - year;
+
+    if( first == NULL || c < 0 ){
+        tYear * new = malloc(sizeof(tYear));
+        if(new == NULL)
+            exit;
+        new->year = year;
+        new->movieCount = 0;
+        new->seriesCount = 0;
+        new->tail = first;
+        newNode = new;
+        return new;
+    }
+
+    if( c > 0 )
+        first->tail = addYearREC(first->tail, year, newNode);
+    if(c==0){
+        newNode = first;
+    return first;
+}
 
 //De aca para abajo falta rehacerlo con la nueva estructura.
 
@@ -100,3 +128,10 @@ int hasNextYear(movieSeriesADT movieSeries){
 void nextYear(movieSeriesADT movieSeries){
     movieSeries->currYear = movieSeries->currYear->tail;
 }
+
+
+tYear * addYear(movieSeriesADT adt, int year){
+    if()
+}
+
+tYear * addYearRec
