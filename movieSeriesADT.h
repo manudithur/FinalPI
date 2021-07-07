@@ -3,6 +3,13 @@
 
 typedef struct movieSeriesCDT * movieSeriesADT;
 
+//FUNCION PARA CREAR UN NUEVO ADT
+
+movieSeriesADT newMovieSeries ();
+
+//FUNCIONES PARA EL MANEJO DE DATOS
+void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes );
+tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag );
 //FUNCIONES PARA QUERY1
 //devuelve el anio actual en el que esta el iterador
 int currYear(movieSeriesADT movieSeries);
