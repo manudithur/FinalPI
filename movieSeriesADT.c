@@ -95,7 +95,7 @@ void mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, floa
 }
 
 //Funciones que liberan recursos
-void freeRecContent(tContent * list){
+static void freeRecContent(tContent * list){
     if(list == NULL)
         return;
     freeRecContent(list->tail);
@@ -107,7 +107,7 @@ void freeRecContent(tContent * list){
     free(list);
 }
 
-void freeYearsRec(tYear * first){
+static void freeYearsRec(tYear * first){
     if(first == NULL)
         return;
     freeYearsRec(first->tail);

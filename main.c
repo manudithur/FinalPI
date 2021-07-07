@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "movieSeriesADT.c"   //hay q incluir el .h 
+#include "movieSeriesADT.h"   //hay q incluir el .h
 
 int main( int argc, char *argv){
     
