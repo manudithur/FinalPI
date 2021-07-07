@@ -3,12 +3,9 @@
 #include "movieSeriesADT.h"
 
 typedef struct content {            //Lista para los contenidos. Se consideran por igual series y peliculas.
-    char * title;
-    int startY;
-    int endY;
-    float rating;
-    int runTimeMins;
-    unsigned int numVotes;
+    char * title;                   //Solo vamos a almacenar los datos del CSV que nos sirven para nuestros queries
+    float rating;                   //Todos los otros datos seran ignorados.
+    unsigned int numVotes;          //En caso de necesitar otros datos se modificaria el add y la estructura.
     struct content * tail;
 } tContent;
 
@@ -29,6 +26,7 @@ typedef struct year {               //Lista de los anios de mayor a menor
     unsigned int movieCount;
     unsigned int seriesCount;
     tGenre * firstGenre;
+    tGenre * currGenre;
     struct year * tail;
 } tYear;
 
