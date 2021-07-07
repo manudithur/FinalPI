@@ -2,10 +2,8 @@
 #include <string.h>
 #include "movieSeriesADT.h"
 
-typedef struct content {
-    char * type;
+typedef struct content {            //Lista para los contenidos. Se consideran por igual series y peliculas.
     char * title;
-    char ** genres;
     int startY;
     int endY;
     float rating;
@@ -14,50 +12,34 @@ typedef struct content {
     struct content * tail;
 } tContent;
 
-typedef struct year {
+typedef struct genre{              //Lista de los generos
+    char * genre;                  //Se van a guardar en orden alfabetico
+    unsigned int count;
+    tGenre * tail;
+}tGenre;
+
+tGenre * increaseIfNotCreate(tGenre * firstGenre, char * genre){
+
+}
+
+typedef struct year {               //Lista de los anios de mayor a menor
     int year;
-    tContent * firstContent;
+    tContent * firstMovie;          //Puntero al primer nodo de la lista de movies.
+    tContent * firstSeries;         //Puntero al primer nodo de la lista series.
+    unsigned int movieCount;
+    unsigned int seriesCount;
+    tGenre * firstGenre;
     struct year * tail;
 } tYear;
 
 typedef struct movieSeriesCDT {
-    tYear * vecYears;
-    tYear * currYear;
+    tYear * firstYear;              //Puntero al primer nodo de la lista year
+    tYear * currYear;               //Puntero al nodo actual de trabajo (iterador)
 } movieSeriesCDT;
 
-int countType(tContent * firstContent, char * type){
 
-    int c = 0;
 
-    tContent * aux = firstContent;
-    while ( aux != NULL){
-        if( strcmp(aux->type, type ) == 0 )
-            c++;
-        aux = aux->tail;
-    }
-
-    return c;
-
-}
-
-int countGenre(tContent * firstContent, char * genre){
-    int c = 0;
-
-    tContent * aux = firstContent;
-    int flag = 0;
-    while ( aux != NULL){
-        for( int i = 0 ; firstContent->genres[i] && !flag ; i++ ){
-            if( strcmp(firstContent->genres[i], genre) == 0 ){
-                c++;
-                flag = 1;
-            }
-        }
-        aux = aux->tail;
-        flag = 0;
-    }
-
-    return c;
-}
+//De aca para abajo falta rehacerlo con la nueva estructura.
 
 void maxType (movieSeriesADT movieSeries, char * tipo, char * nombre, int * votes, float * rating) {
     tYear * year = movieSeries->currYear;
