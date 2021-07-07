@@ -3,6 +3,8 @@
 
 typedef struct movieSeriesCDT * movieSeriesADT;
 
+movieSeriesADT newMovieSeries();
+
 //FUNCIONES PARA QUERY1
 //devuelve el anio actual en el que esta el iterador
 int currYear(movieSeriesADT movieSeries);
