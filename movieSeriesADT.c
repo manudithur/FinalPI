@@ -215,3 +215,35 @@ int hasNextGenre(movieSeriesADT movieSeries) {
 void nextGenre(movieSeriesADT movieSeries) {
     movieSeries->currYear->currGenre = movieSeries->currYear->currGenre->tail;
 }
+
+//libero recursos
+static void freeContentRec (tContent * list) {
+    if (list == NULL)
+        return;
+    freeContentRec(list->tail);
+    free(list->title);
+    free(list);
+}
+
+static void freeGenreRec (tGenre * list) {
+    if (list == NULL)
+        return;
+    freeGenreRec(list->tail);
+    free(list->genre);
+    free(list);
+}
+
+static void freeYearsRec (tYear * yearList) {
+    if (yearList == NULL)
+        return;
+    freeYearsRec(yearList->tail);
+    freeContentRec(yearList->firstMovie);
+    freeContentRec(yearList->firstSeries);
+    freeGenreRec(yearList->firstGenre);
+    free(yearList->currGenre);
+}
+
+void free (movieSeriesADT movieSeries) {
+    freeYearsRec(movieSeries->firstYear);
+    free(movieSeries);
+}
