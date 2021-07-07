@@ -9,7 +9,6 @@ movieSeriesADT newMovieSeries ();
 
 //FUNCIONES PARA EL MANEJO DE DATOS
 void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes );
-tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag );
 
 //FUNCIONES PARA QUERY1
 //devuelve el anio actual en el que esta el iterador
@@ -27,20 +26,15 @@ int currGenreCount(movieSeriesADT movieSeries);
 
 //FUNCIONES PARA QUERY3
 //devuelve un puntero al tContent con mas votos
-static tContent * findMostVotes(tContent * list);
 //devuelve por parametros de salida el nombre, la cantidad de votos y el rating
 //de la serie mas votada del currYear
-void mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating);
+int mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating);
 //devuelve por parametros de salida el nombre, la cantidad de votos y el rating
 //de la serie mas votada del currYear
-void mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating);
+int mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating);
 
-//Funciones que liberan recursos
-static void freeRecContent(tContent * list);
 
-static void freeYearsRec(tYear * first);
-
-void free(movieSeriesADT movieSeries);
+//void free(movieSeriesADT movieSeries);
 
 //Controladores del iterador de year
 void toBeginYear(movieSeriesADT movieSeries);

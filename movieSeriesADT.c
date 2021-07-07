@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "movieSeriesADT.h"
 
+
+
 typedef struct content {            //Lista para los contenidos. Se consideran por igual series y peliculas.
     char * title;                   //Solo vamos a almacenar los datos del CSV que nos sirven para nuestros queries
     float rating;                   //Todos los otros datos seran ignorados.
@@ -32,7 +34,12 @@ typedef struct movieSeriesCDT {
     tYear * currYear;               //Puntero al nodo actual de trabajo (iterador)
 } movieSeriesCDT;
 
-<<<<<<< Updated upstream
+//static void freeRecContent(tContent * list);
+//static void freeYearsRec(tYear * first);
+static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag );
+static tYear * addYearREC(tYear * first, int year, tYear ** newNode);
+static tContent * findMostVotes(tContent * list);
+
 //Esta funcion paso el testeo 2021-07-07 17:03:40
 
 tYear * searchOrAddYear(movieSeriesADT adt, int year){
@@ -42,7 +49,7 @@ tYear * searchOrAddYear(movieSeriesADT adt, int year){
 }
 
 //Esta funcion paso el testeo 2021-07-07 17:03:40
-tYear * addYearREC(tYear * first, int year, tYear ** newNode){
+static tYear * addYearREC(tYear * first, int year, tYear ** newNode){
 
     int c;
     if( first == NULL || (c = first->year - year) < 0 ){
@@ -70,7 +77,6 @@ void addContent(movieSeriesADT adt, int year, char * type, char * title, float r
     int c;
     if((c=strcmp(type, "movie"))==0){
         currYear->firstMovie = addContentREC(currYear->firstMovie, title, rating, votes, &flag);
-        printf("  --  Lo agregue\n");
         currYear->movieCount += flag;
     }
     else if((c=strcmp(type, "tvSeries"))==0){
@@ -80,7 +86,7 @@ void addContent(movieSeriesADT adt, int year, char * type, char * title, float r
     return;
 }
 
-tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag ){
+static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag ){
     int c;
     if(first == NULL || (c=first->numVotes - votes) < 0 ){
         tContent * new = malloc(sizeof(tContent));
@@ -91,7 +97,6 @@ tContent * addContentREC(tContent * first, char * title, float rating, unsigned 
         new->rating = rating;
         new->numVotes = votes;
         new->tail = first;
-        printf("Llegue al rec");
         *flag = 1;
         return new;
     }
@@ -169,24 +174,30 @@ void _mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, flo
 }
 
 //teniendo en cuenta que las movies y series estan ordenadas de mas votos a menos
-void mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
-    char * title = malloc(strlen(movieSeres->currYear->firstMovie->title)+1);
+int mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
+    if(movieSeries->currYear->firstMovie == NULL)
+        return 0;
+    char * title = malloc(strlen(movieSeries->currYear->firstMovie->title)+1);
     if (title == NULL)
         exit(1);
     strcpy(title,movieSeries->currYear->firstMovie->title);
     *name = title;
     *votes = movieSeries->currYear->firstMovie->numVotes;
     *rating = movieSeries->currYear->firstMovie->rating;
+    return 1;
 }
 
-void mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
-    char * title = malloc(strlen(movieSeres->currYear->firstSeries->title)+1);
+int mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
+    if(movieSeries->currYear->firstSeries == NULL)
+        return 0;
+    char * title = malloc(strlen(movieSeries->currYear->firstSeries->title)+1);
     if (title == NULL)
         exit(1);
     strcpy(title,movieSeries->currYear->firstSeries->title);
     *name = title;
     *votes = movieSeries->currYear->firstSeries->numVotes;
     *rating = movieSeries->currYear->firstSeries->rating;
+    return 1;
 }
 
 //Controladores del iterador de year
@@ -214,7 +225,7 @@ int hasNextGenre(movieSeriesADT movieSeries) {
 void nextGenre(movieSeriesADT movieSeries) {
     movieSeries->currYear->currGenre = movieSeries->currYear->currGenre->tail;
 }
-
+/*
 //libero recursos
 static void freeContentRec (tContent * list) {
     if (list == NULL)
@@ -246,3 +257,4 @@ void free (movieSeriesADT movieSeries) {
     freeYearsRec(movieSeries->firstYear);
     free(movieSeries);
 }
+*/
