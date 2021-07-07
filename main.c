@@ -3,7 +3,7 @@
 #include <string.h>
 #include "movieSeriesADT.h"
 
-int main( int argc, char *argv){
+int main( int argc, char *argv[]){
 
     //FER:
     movieSeriesADT movieSeries = newMovieSeries();

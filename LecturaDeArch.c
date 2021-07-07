@@ -27,6 +27,7 @@ int main( int argc, char *argv[]){
         exit(1);
     }
     char* token;
+    movieSeriesADT movieSeries = newMovieSeries();
     char* n=fgets(string,MAXTEXTO,miArch);   //para "saltear" la primer linea
     while(fgets(string,MAXTEXTO,miArch)){    //asumimos que como maximo hay 200 caracteres por linea
         
@@ -70,7 +71,7 @@ int main( int argc, char *argv[]){
             }                                            
         }
 
-        /*aca va el add con los datos*/
+        addContent(movieSeries,year,type,title,rating,numVotes);
     }
     free(string);
     fclose(miArch);
