@@ -12,7 +12,7 @@ typedef struct content {            //Lista para los contenidos. Se consideran p
 typedef struct genre{              //Lista de los generos
     char * genre;                  //Se van a guardar en orden alfabetico
     unsigned int count;
-    tGenre * tail;
+    struct genre * tail;
 }tGenre;
 
 typedef struct year {               //Lista de los anios de mayor a menor
@@ -64,6 +64,65 @@ tContent * maxVotes (tContent * list, char * tipo) {
 
 }
 
+//Funciones para query1
+int currYear(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->year;
+}
+
+int currYearMovieCount(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->movieCount;
+}
+
+int currYearSeriesCount(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->seriesCount;
+}
+
+//Funciones para query2
+char * currGenre(movieSeriesADT movieSeries) {
+    char * ans = malloc(strlen(movieSeries->currYear->currGenre->genre) + 1);
+    if (ans == NULL)
+        exit(1); //IMPORTANT como lidiamos con falta de mem?
+    strcpy(ans,movieSeries->currYear->currGenre->genre);
+    return ans;
+}
+
+int currGenreCount(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->currGenre->count;
+}
+
+//Funciones para query3
+static tContent * findMostVotes(tContent * list) {
+    int max = 0;
+    tContent * ans, * curr = list;
+    while (curr != NULL) {
+        if (curr->numVotes > max) {
+            max = curr->numVotes;
+            ans = curr;
+        }
+        curr = curr->tail;
+    }
+    return ans;
+}
+
+void mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
+    tContent * aux = findMostVotes(movieSeries->currYear->firstMovie);
+    char * title = malloc(strlen(aux->title)+1);
+    strcpy(title,aux->title);
+    *name = title;
+    *votes = aux->numVotes;
+    *rating = aux->rating;
+}
+
+void mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
+    tContent * aux = findMostVotes(movieSeries->currYear->firstSeries);
+    char * title = malloc(strlen(aux->title)+1);
+    strcpy(title,aux->title);
+    *name = title;
+    *votes = aux->numVotes;
+    *rating = aux->rating;
+}
+
+//Funciones que liberan recursos
 void freeRecContent(tContent * list){
     if(list == NULL)
         return;
@@ -89,8 +148,9 @@ void free(movieSeriesADT movieSeries){
     free(movieSeries);
 }
 
+//Controladores del iterador de year
 void toBeginYear(movieSeriesADT movieSeries){
-    movieSeries->currYear =movieSeries->vecYears;
+    movieSeries->currYear = movieSeries->firstYear;
 }
 
 int hasNextYear(movieSeriesADT movieSeries){
@@ -99,4 +159,17 @@ int hasNextYear(movieSeriesADT movieSeries){
 
 void nextYear(movieSeriesADT movieSeries){
     movieSeries->currYear = movieSeries->currYear->tail;
+}
+
+//Controladores del iterador de genre
+void toBeginGenre(movieSeriesADT movieSeries) {
+    movieSeries->currYear->currGenre = movieSeries->currYear->firstGenre;
+}
+
+int hasNextGenre(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->currGenre != NULL;
+}
+
+void nextGenre(movieSeriesADT movieSeries) {
+    movieSeries->currYear->currGenre = movieSeries->currYear->currGenre->tail;
 }
