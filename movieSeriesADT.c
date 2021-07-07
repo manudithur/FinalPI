@@ -128,10 +128,78 @@ int hasNextYear(movieSeriesADT movieSeries){
 void nextYear(movieSeriesADT movieSeries){
     movieSeries->currYear = movieSeries->currYear->tail;
 }
-
-
-tYear * addYear(movieSeriesADT adt, int year){
-    if()
+//Controladores del iterador de genre
+void toBeginGenre(movieSeriesADT movieSeries) {
+    movieSeries->currYear->currGenre = movieSeries->currYear->firstGenre;
 }
 
-tYear * addYearRec
+int hasNextGenre(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->currGenre != NULL;
+}
+
+void nextGenre(movieSeriesADT movieSeries) {
+    movieSeries->currYear->currGenre = movieSeries->currYear->currGenre->tail;
+}
+
+int currYearMovieCount(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->movieCount;
+
+}
+
+int currYearSeriesCount(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->seriesCount;
+}
+
+//Funciones para query2
+char * currGenre(movieSeriesADT movieSeries) {
+    char * ans = malloc(strlen(movieSeries->currYear->currGenre->genre) + 1);
+    if (ans == NULL)
+        exit(1);
+    strcpy(ans,movieSeries->currYear->currGenre->genre);
+    return ans;
+}
+
+int currGenreCount(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->currGenre->count;
+}
+
+//Funciones para query3
+static tContent * findMostVotes(tContent * list) {
+    int max = 0;
+    tContent * ans, * curr = list;
+    while (curr != NULL) {
+        if (curr->numVotes > max) {
+            max = curr->numVotes;
+            ans = curr;
+        }
+        curr = curr->tail;
+    }
+    return ans;
+}
+
+void mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
+    tContent * aux = findMostVotes(movieSeries->currYear->firstMovie);
+    char * title = malloc(strlen(aux->title)+1);
+    if (title == NULL)
+        exit(1);
+    strcpy(title,aux->title);
+    *name = title;
+    *votes = aux->numVotes;
+    *rating = aux->rating;
+}
+
+void mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
+    tContent * aux = findMostVotes(movieSeries->currYear->firstSeries);
+    char * title = malloc(strlen(aux->title)+1);
+    if (title == NULL)
+        exit(1);
+    strcpy(title,aux->title);
+    *name = title;
+    *votes = aux->numVotes;
+    *rating = aux->rating;
+}
+
+//Funciones para query1
+int currYear(movieSeriesADT movieSeries) {
+    return movieSeries->currYear->year;
+}
