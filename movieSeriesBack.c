@@ -35,8 +35,8 @@ void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s) {
     if (genres == NULL)
         exit(1);
     strAux = strtok(finalAux, ",");
+    int count = 0;
     if (!strcmp(type, "movie")) {
-        int count = 0;
         while (strAux != NULL) {
             count++;
             auxMem = realloc(genres, sizeof(char *) * count);
@@ -50,6 +50,16 @@ void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s) {
             strAux = strtok(NULL, ",");
         }
     }
-
-    addContent(movieSeries, year, type, title, rating, numVotes);
+    if(count != 0){
+        count ++;
+        auxMem = realloc(genres, sizeof(char *) * count);
+        if (auxMem == NULL)
+            exit(1);
+        genres = auxMem;
+        genres[count - 1] = NULL;
+    }
+    //int i;
+    //for(i=0 ; genres[i] ; i++)
+        //printf("%s\n", genres[i]);
+    addContent(movieSeries, year, type, title, rating, numVotes, genres);
 }

@@ -8,7 +8,7 @@ typedef struct movieSeriesCDT * movieSeriesADT;
 movieSeriesADT newMovieSeries ();
 
 //FUNCIONES PARA EL MANEJO DE DATOS
-void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes );
+void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes, char ** genres );
 
 //FUNCIONES PARA QUERY1
 //devuelve el anio actual en el que esta el iterador

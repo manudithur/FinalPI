@@ -30,7 +30,7 @@ int main( int argc, char *argv[]){
         exit(1);
     }
     movieSeriesADT movieSeries = newMovieSeries();
-    char* n=fgets(string,MAXTEXTO,miArch);   //para "saltear" la primer linea
+    fgets(string,MAXTEXTO,miArch);   //para "saltear" la primer linea
     while(fgets(string,MAXTEXTO,miArch)){    //asumimos que como maximo hay 200 caracteres por linea
         analizeAndAdd(movieSeries, string, s);
     }
@@ -57,7 +57,7 @@ int main( int argc, char *argv[]){
     fclose(q1);
 
     //query2
-    /*FILE* q2=fopen("query2.csv","w");
+    FILE* q2=fopen("query2.csv","w");
     if (q2==NULL)
     {
         perror("Error: ");
@@ -74,7 +74,7 @@ int main( int argc, char *argv[]){
         }
         nextYear(movieSeries);
     }
-    fclose(q2);*/
+    fclose(q2);
 
 
     //query3

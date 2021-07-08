@@ -38,8 +38,7 @@ typedef struct movieSeriesCDT {
 //static void freeYearsRec(tYear * first);
 static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag );
 static tYear * addYearREC(tYear * first, int year, tYear ** newNode);
-static tContent * findMostVotes(tContent * list);
-
+static tGenre * addGenreREC(tGenre * first, char * genre);
 //Esta funcion paso el testeo 2021-07-07 17:03:40
 
 tYear * searchOrAddYear(movieSeriesADT adt, int year){
@@ -71,19 +70,42 @@ static tYear * addYearREC(tYear * first, int year, tYear ** newNode){
 }
 
 //Esta funcion paso el teesteo el 2021-07-07 18:20:17
-void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes ){
+void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes, char ** genres){
     int flag = 0;
     tYear * currYear = searchOrAddYear(adt, year);
     int c;
     if((c=strcmp(type, "movie"))==0){
         currYear->firstMovie = addContentREC(currYear->firstMovie, title, rating, votes, &flag);
         currYear->movieCount += flag;
+        int i;
+        for( i = 0 ; genres[i] != NULL ; i++)
+            currYear->firstGenre = addGenreREC(currYear->firstGenre, genres[i]);
+        
     }
     else if((c=strcmp(type, "tvSeries"))==0){
         currYear->firstSeries = addContentREC(currYear->firstSeries, title, rating, votes, &flag);
         currYear->seriesCount += flag;
     }
     return;
+}
+
+tGenre * addGenreREC(tGenre * first, char * genre){
+    int c;
+    if(first == NULL || (c=strcmp(first->genre, genre)) > 0){
+        tGenre * new = malloc(sizeof(tGenre));
+        if(new == NULL)
+            exit(1);
+        new->genre = malloc(strlen(genre)+1);
+        strcpy(new->genre, genre);
+        new->count = 1;
+        new->tail = first;
+        return new;
+    }
+    else if(c<0)
+        first->tail = addGenreREC(first->tail, genre);
+    else                                                              //En este punto c=0;
+        first->count++;
+    return first;
 }
 
 static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag ){
