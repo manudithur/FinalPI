@@ -51,15 +51,12 @@ void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s) {
         }
     }
     if(count != 0){
-        count ++;
+        count++;
         auxMem = realloc(genres, sizeof(char *) * count);
         if (auxMem == NULL)
             exit(1);
         genres = auxMem;
         genres[count - 1] = NULL;
     }
-    //int i;
-    //for(i=0 ; genres[i] ; i++)
-        //printf("%s\n", genres[i]);
     addContent(movieSeries, year, type, title, rating, numVotes, genres);
 }

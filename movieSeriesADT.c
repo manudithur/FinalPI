@@ -49,7 +49,6 @@ tYear * searchOrAddYear(movieSeriesADT adt, int year){
 
 //Esta funcion paso el testeo 2021-07-07 17:03:40
 static tYear * addYearREC(tYear * first, int year, tYear ** newNode){
-
     int c;
     if( first == NULL || (c = first->year - year) < 0 ){
         tYear * new = malloc(sizeof(tYear));
@@ -73,8 +72,7 @@ static tYear * addYearREC(tYear * first, int year, tYear ** newNode){
 void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes, char ** genres){
     int flag = 0;
     tYear * currYear = searchOrAddYear(adt, year);
-    int c;
-    if((c=strcmp(type, "movie"))==0){
+    if((strcmp(type, "movie"))==0){
         currYear->firstMovie = addContentREC(currYear->firstMovie, title, rating, votes, &flag);
         currYear->movieCount += flag;
         int i;
@@ -82,7 +80,7 @@ void addContent(movieSeriesADT adt, int year, char * type, char * title, float r
             currYear->firstGenre = addGenreREC(currYear->firstGenre, genres[i]);
         
     }
-    else if((c=strcmp(type, "tvSeries"))==0){
+    else if((strcmp(type, "tvSeries"))==0){
         currYear->firstSeries = addContentREC(currYear->firstSeries, title, rating, votes, &flag);
         currYear->seriesCount += flag;
     }
@@ -109,8 +107,7 @@ tGenre * addGenreREC(tGenre * first, char * genre){
 }
 
 static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag ){
-    int c;
-    if(first == NULL || (c=first->numVotes - votes) < 0 ){
+    if(first == NULL || (first->numVotes - votes) < 0 ){
         tContent * new = malloc(sizeof(tContent));
         if (new == NULL)
             exit(1);
