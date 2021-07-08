@@ -9,27 +9,22 @@ int main( int argc, char *argv[]){
     movieSeriesADT movieSeries = newMovieSeries();
 
     //query1
-    write(“year;films;series”);
+    fprintf(FPTRSALIDA, "year;films;series\n");
     toBeginYear(movieSeries);
     while(hasNextYear(movieSeries)){
-        write(currYear(movieSeries));
-        write(;);
-        write(currYearMovieCount(adt));
-        write(;);
-        write(currYearSeriesCount(adt));
-        write(‘/n’)
+        fprintf(FPTRSALIDA, "%d;%d;%d\n",currYear(movieSeries),
+                currYearMovieCount(movieSeries), currYearSeriesCount(movieSeries));
         nextYear(movieSeries);
     }
 
     //query2
-    write (encabezado);
+    fprintf(FPTRSALIDA, "year;genre;films\n");
     toBeginYear(movieSeries);
     while(hasNextYear(movieSeries)){
         toBeginGenre(movieSeries);
         while (hasNextGenre(movieSeries)) {
-            write(currYear(movieSeries));
-            write(currGenre(movieSeries));
-            write(currGenreCount(movieSeries));
+            fprintf(FPTRSALIDA, "%d;%d;%d\n", currYear(movieSeries),
+                    currGenre(movieSeries),currGenreCount(movieSeries));
             nextGenre(movieSeries);
         }
         nextYear(movieSeries);
@@ -37,14 +32,15 @@ int main( int argc, char *argv[]){
 
 
     //query3
-    write (encabezado)
+    fprintf(FPTRSALIDA, "startYear;film;votesFilm;ratingFilm;serie;votesSerie;ratingSerie\n");
     toBeginYear(movieSeries)
     while (hasNextYear(movieSeries)) {
+        fprintf(FPTRSALIDA, "%d;", currYear(movieSeries));
         char * name; int votes; float rating;
         mostVotedMovie(adt,&name,&votes,&rating);
-        Write (name, votes, rating);
+        fprintf(FPTRSALIDA, "%s;%d;%f;",name,votes,rating);
         mostVotedSeries(adt,&name,&votes,&rating);
-        Write (name, votes, rating);
+        fprintf(FPTRSALIDA, "%s;%d;%f\n",name,votes,rating);
         nextYear(movieSeries);
     }
 }
