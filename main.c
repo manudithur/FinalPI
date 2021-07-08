@@ -36,7 +36,7 @@ int main( int argc, char *argv[]){
     while(hasNextYear(movieSeries)){
         toBeginGenre(movieSeries);
         while (hasNextGenre(movieSeries)) {
-            fprintf(q2, "%d;%d;%d\n", currYear(movieSeries),
+            fprintf(q2, "%d;%s;%d\n", currYear(movieSeries),
                     currGenre(movieSeries),currGenreCount(movieSeries));
             nextGenre(movieSeries);
         }
