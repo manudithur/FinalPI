@@ -59,4 +59,8 @@ void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s) {
         genres[count - 1] = NULL;
     }
     addContent(movieSeries, year, type, title, rating, numVotes, genres);
+    int i;
+    for(i=0 ; genres[i]!=NULL ; i++)
+        free(genres[i]);
+    free(genres);
 }

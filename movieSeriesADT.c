@@ -51,12 +51,10 @@ tYear * searchOrAddYear(movieSeriesADT adt, int year){
 static tYear * addYearREC(tYear * first, int year, tYear ** newNode){
     int c;
     if( first == NULL || (c = first->year - year) < 0 ){
-        tYear * new = malloc(sizeof(tYear));
+        tYear * new = calloc(1, sizeof(tYear));
         if(new == NULL)
             exit(1);
-        new->year = year;
-        new->movieCount = 0;
-        new->seriesCount = 0;
+        new->year = year;        
         new->tail = first;
         *newNode = new;
         return new;
@@ -143,12 +141,11 @@ int currYearSeriesCount(movieSeriesADT movieSeries) {
 }
 
 //Funciones para query2
-char * currGenre(movieSeriesADT movieSeries) {
-    char * ans = malloc(strlen(movieSeries->currYear->currGenre->genre) + 1);
-    if (ans == NULL)
+void currGenre(movieSeriesADT movieSeries, char ** genre) {
+    *genre = malloc(strlen(movieSeries->currYear->currGenre->genre) + 1);
+    if (*genre == NULL)
         exit(1);
-    strcpy(ans,movieSeries->currYear->currGenre->genre);
-    return ans;
+    strcpy(*genre,movieSeries->currYear->currGenre->genre);
 }
 
 int currGenreCount(movieSeriesADT movieSeries) {
@@ -208,8 +205,8 @@ int hasNextGenre(movieSeriesADT movieSeries) {
 void nextGenre(movieSeriesADT movieSeries) {
     movieSeries->currYear->currGenre = movieSeries->currYear->currGenre->tail;
 }
-/*
-//libero recursos
+
+
 static void freeContentRec (tContent * list) {
     if (list == NULL)
         return;
@@ -218,7 +215,7 @@ static void freeContentRec (tContent * list) {
     free(list);
 }
 
-static void freeGenreRec (tGenre * list) {
+static void freeGenreRec(tGenre * list) {
     if (list == NULL)
         return;
     freeGenreRec(list->tail);
@@ -226,18 +223,18 @@ static void freeGenreRec (tGenre * list) {
     free(list);
 }
 
-static void freeYearsRec (tYear * yearList) {
+static void freeYearsRec(tYear * yearList) {
     if (yearList == NULL)
         return;
     freeYearsRec(yearList->tail);
     freeContentRec(yearList->firstMovie);
     freeContentRec(yearList->firstSeries);
     freeGenreRec(yearList->firstGenre);
-    free(yearList->currGenre);
+    free(yearList);
 }
 
-void free (movieSeriesADT movieSeries) {
+void freeMovieSeries(movieSeriesADT movieSeries) {
     freeYearsRec(movieSeries->firstYear);
     free(movieSeries);
 }
-*/
+

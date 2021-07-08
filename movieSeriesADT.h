@@ -20,7 +20,7 @@ int currYearSeriesCount(movieSeriesADT movieSeries);
 
 //FUNCIONES PARA QUERY2
 //devuelve una copia del nombre del genre actual
-char * currGenre(movieSeriesADT movieSeries);
+void currGenre(movieSeriesADT movieSeries, char ** genre);
 //devuelve la cantidad de genres en el anio actual
 int currGenreCount(movieSeriesADT movieSeries);
 
@@ -35,7 +35,7 @@ int mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float
 
 
 //void free(movieSeriesADT movieSeries);
-
+void freeMovieSeries(movieSeriesADT movieSeries);
 //Controladores del iterador de year
 void toBeginYear(movieSeriesADT movieSeries);
 

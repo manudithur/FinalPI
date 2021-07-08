@@ -68,9 +68,11 @@ int main( int argc, char *argv[]){
     while(hasNextYear(movieSeries)){
         toBeginGenre(movieSeries);
         while (hasNextGenre(movieSeries)) {
-            fprintf(q2, "%d;%s;%d\n", currYear(movieSeries),
-                    currGenre(movieSeries),currGenreCount(movieSeries));
+            char * genre;
+            currGenre(movieSeries, &genre);
+            fprintf(q2, "%d;%s;%d\n", currYear(movieSeries), genre, currGenreCount(movieSeries));
             nextGenre(movieSeries);
+            free(genre);
         }
         nextYear(movieSeries);
     }
@@ -95,8 +97,10 @@ int main( int argc, char *argv[]){
             fprintf(q3, "%s;%d;%.1f",name,votes,rating);
         fprintf(q3, "\n");
         nextYear(movieSeries);
+        free(name);
     }
     fclose(q3);
 
+    freeMovieSeries(movieSeries);
 }
 
