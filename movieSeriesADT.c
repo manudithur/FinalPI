@@ -88,7 +88,7 @@ void addContent(movieSeriesADT adt, int year, char * type, char * title, float r
 tGenre * addGenreREC(tGenre * first, char * genre){
     int c;
     if(first == NULL || (c=strcmp(first->genre, genre)) > 0){
-        tGenre * new = malloc(sizeof(tGenre));
+        tGenre * new = calloc(1, sizeof(tGenre));
         if(new == NULL)
             exit(1);
         new->genre = malloc(strlen(genre)+1);
@@ -106,7 +106,7 @@ tGenre * addGenreREC(tGenre * first, char * genre){
 
 static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag ){
     if(first == NULL || (first->numVotes - votes) < 0 ){
-        tContent * new = malloc(sizeof(tContent));
+        tContent * new = calloc(1, sizeof(tContent));
         if (new == NULL)
             exit(1);
         new->title = malloc(strlen(title)+1);

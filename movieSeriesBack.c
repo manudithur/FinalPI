@@ -40,12 +40,16 @@ void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s) {
         while (strAux != NULL) {
             count++;
             auxMem = realloc(genres, sizeof(char *) * count);
+
             if (auxMem == NULL)
                 exit(1);
+
             genres = auxMem;
             genres[count - 1] = malloc(strlen(strAux) + 1);
+
             if (genres[count - 1] == NULL)
                 exit(1);
+                
             strcpy(genres[count - 1], strAux);
             strAux = strtok(NULL, ",");
         }

@@ -4,7 +4,7 @@
 #include "movieSeriesADT.h"
 #include "movieSeriesBack.h"
 #define MAXGENRE 3
-#define MAXTEXTO 200
+#define MAXTEXTO 300
 
 int main( int argc, char *argv[]){
     
@@ -23,7 +23,7 @@ int main( int argc, char *argv[]){
     }
 
     const char s[2]=";";
-    char* string=malloc(sizeof(char)*200);
+    char* string=malloc(sizeof(char)*MAXTEXTO);
     if (string==NULL)
     {
         perror("Error de memoria");
@@ -90,14 +90,17 @@ int main( int argc, char *argv[]){
     toBeginYear(movieSeries);
     while (hasNextYear(movieSeries)) {
         fprintf(q3, "%d;", currYear(movieSeries));
-        char * name; int votes; float rating;
-        if(mostVotedMovie(movieSeries,&name,&votes,&rating))
-            fprintf(q3, "%s;%d;%.1f;",name,votes,rating);
-        if(mostVotedSeries(movieSeries,&name,&votes,&rating))
-            fprintf(q3, "%s;%d;%.1f",name,votes,rating);
+        char * nameM, * nameS; int votes; float rating;
+        if(mostVotedMovie(movieSeries,&nameM,&votes,&rating)){
+            fprintf(q3, "%s;%d;%.1f;",nameM,votes,rating);
+            free(nameM);
+        }
+        if(mostVotedSeries(movieSeries,&nameS,&votes,&rating)){
+            fprintf(q3, "%s;%d;%.1f",nameS,votes,rating);
+            free(nameS);
+        }
         fprintf(q3, "\n");
         nextYear(movieSeries);
-        free(name);
     }
     fclose(q3);
 
