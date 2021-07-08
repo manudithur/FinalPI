@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "movieSeriesADT.h"   
+#include "movieSeriesADT.h"
+#include "movieSeriesBack.h"
 #define MAXGENRE 3
 #define MAXTEXTO 200
 
@@ -32,59 +33,7 @@ int main( int argc, char *argv[]){
     movieSeriesADT movieSeries = newMovieSeries();
     char* n=fgets(string,MAXTEXTO,miArch);   //para "saltear" la primer linea
     while(fgets(string,MAXTEXTO,miArch)){    //asumimos que como maximo hay 200 caracteres por linea
-        
-        
-        token=strtok(string,s);
-        char* type=token;                
-
-        token=strtok(NULL,s);
-        char* title=token;
-
-        token=strtok(NULL,s);
-        int year=atoi(token);
-        
-
-        token=strtok(NULL,s);                          //no nos interesa endY
-        
-
-        token=strtok(NULL,s);
-        char* finalAux=token;                             
-        /* trabajo despues con generos para no afectar el estado interno de strtok */
-
-        token=strtok(NULL,s);
-        float rating=atof(token);
-
-        token=strtok(NULL,s);
-        int numVotes=atoi(token);
-
-        token=strtok(NULL,s);                       //no nos interesa runtimeMins
-
-
-
-
-        char *strAux;
-        char **genres, **auxMem;             //llena con NULL, y si es movie y tiene uno o mas
-        genres = calloc(1, sizeof(char *));
-        if (genres == NULL)
-            exit(1);
-        strAux = strtok(finalAux, ",");
-        if (!strcmp(type, "movie")) {
-            int count = 0
-            while (strAux != NULL) {
-                count++;
-                auxMem = realloc(genres, sizeof(char *) * count);
-                if (auxMem == NULL)
-                    exit(1);
-                genres = auxMem;
-                genres[count - 1] = malloc(strlen(strAux) + 1);
-                if (genres[count - 1] == NULL)
-                    exit(1);
-                strcpy(genres[count - 1], strAux);
-                strAux = strtok(NULL, ",");
-            }
-        }
-
-        addContent(movieSeries,year,type,title,rating,numVotes);
+        analizeAndAdd(string,s);
     }
     free(string);
     fclose(miArch);
