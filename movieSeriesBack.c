@@ -2,9 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "movieSeriesADT.h"
 
-void analizeAndAdd (char * string, const char * s) {
-
+void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s) {
+    char * token;
     token = strtok(string, s);
     char *type = token;
 
@@ -35,7 +36,7 @@ void analizeAndAdd (char * string, const char * s) {
         exit(1);
     strAux = strtok(finalAux, ",");
     if (!strcmp(type, "movie")) {
-        int count = 0
+        int count = 0;
         while (strAux != NULL) {
             count++;
             auxMem = realloc(genres, sizeof(char *) * count);

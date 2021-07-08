@@ -137,42 +137,6 @@ int currGenreCount(movieSeriesADT movieSeries) {
 }
 
 //Funciones para query3
-//si estan desordenadas
-static tContent * findMostVotes(tContent * list) {
-    int max = 0;
-    tContent * ans, * curr = list;
-    while (curr != NULL) {
-        if (curr->numVotes > max) {
-            max = curr->numVotes;
-            ans = curr;
-        }
-        curr = curr->tail;
-    }
-    return ans;
-}
-
-void _mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
-    tContent * aux = findMostVotes(movieSeries->currYear->firstMovie);
-    char * title = malloc(strlen(aux->title)+1);
-    if (title == NULL)
-        exit(1);
-    strcpy(title,aux->title);
-    *name = title;
-    *votes = aux->numVotes;
-    *rating = aux->rating;
-}
-
-void _mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
-    tContent * aux = findMostVotes(movieSeries->currYear->firstSeries);
-    char * title = malloc(strlen(aux->title)+1);
-    if (title == NULL)
-        exit(1);
-    strcpy(title,aux->title);
-    *name = title;
-    *votes = aux->numVotes;
-    *rating = aux->rating;
-}
-
 //teniendo en cuenta que las movies y series estan ordenadas de mas votos a menos
 int mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {
     if(movieSeries->currYear->firstMovie == NULL)
