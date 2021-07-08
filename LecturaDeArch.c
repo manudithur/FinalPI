@@ -118,12 +118,13 @@ int main( int argc, char *argv[]){
     while (hasNextYear(movieSeries)) {
         char * name; int votes; float rating;
         printf("%d      ", currYear(movieSeries));
-        if(mostVotedMovie(movieSeries,&name,&votes,&rating));
-            printf ("%s ;   %d  ;   %g  ;", name, votes, rating);
-        if(mostVotedSeries(movieSeries,&name,&votes,&rating));
+        if(mostVotedMovie(movieSeries,&name,&votes,&rating))
+            printf ("%s ;   %d  ;   %g  ;   ", name, votes, rating);
+        if(mostVotedSeries(movieSeries,&name,&votes,&rating))
             printf ("%s ;   %d  ;   %g", name, votes, rating);
         nextYear(movieSeries);
         putchar('\n');
     }
 
 }
+
