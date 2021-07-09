@@ -69,8 +69,9 @@ void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s, i
     }
 
     //Si no se cumple alguna de estas condiciones no lo agregamos ya que contiene data no valida
-    if (year!=0 && type!=NULL && title!=NULL && rating!=0 && numVotes!=0)
+    if (year!=0 && type!=NULL && title!=NULL && rating!=0 && numVotes!=0){
         addContent(movieSeries, year, type, title, rating, numVotes, genres, errorFlag);
+        }
     int i;
 
     //Liberamos recursos

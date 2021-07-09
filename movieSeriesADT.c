@@ -34,12 +34,11 @@ typedef struct movieSeriesCDT {
     tYear * currYear;               //Puntero al nodo actual de trabajo (iterador)
 } movieSeriesCDT;
 
-//static void freeRecContent(tContent * list);
-//static void freeYearsRec(tYear * first);
+
 static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag, int * errorFlag );
 static tYear * addYearREC(tYear * first, int year, tYear ** newNode, int * errorFlag);
 static tGenre * addGenreREC(tGenre * first, char * genre, int * errorFlag);
-//Esta funcion paso el testeo 2021-07-07 17:03:40
+
 
 static tYear * searchOrAddYear(movieSeriesADT adt, int year, int * errorFlag){
     tYear * found = NULL;                                               //Creamos un puntero a year el cual va a ser la respuesta que devolvemos
@@ -47,7 +46,7 @@ static tYear * searchOrAddYear(movieSeriesADT adt, int year, int * errorFlag){
     return found;
 }
 
-//Esta funcion paso el testeo 2021-07-07 17:03:40
+
 static tYear * addYearREC(tYear * first, int year, tYear ** newNode, int * errorFlag){   //Devuelve el nodo con el anio, si no esta lo crea.
     int c;
     if( first == NULL || (c = first->year - year) < 0 ){                //Si el nodo actual es NULL o el anio que quiero agregar el mayor
@@ -146,7 +145,7 @@ movieSeriesADT newMovieSeries (int * errorFlag) {
     return new;
 }
 
-//Funciones para query1
+
 int currYear(movieSeriesADT movieSeries) {                                          //Devuelve el anio actual en el cual esta el iterador
     return movieSeries->currYear->year;
 }
@@ -160,7 +159,7 @@ int currYearSeriesCount(movieSeriesADT movieSeries) {                           
     return movieSeries->currYear->seriesCount;
 }
 
-//Funciones para query2
+
 void currGenre(movieSeriesADT movieSeries, char ** genre, int * errorFlag) {        //Devuelve en un parametro de entrada/salida el string del genero actual en el iterador de genero
     *genre = malloc(strlen(movieSeries->currYear->currGenre->genre) + 1);
     if (*genre == NULL){                                                            //Si hay error de memoria, dejo el flag de error en 1 y retorno NULL
@@ -206,7 +205,7 @@ int mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float
     return 1;
 }
 
-//Controladores del iterador de year
+
 void toBeginYear(movieSeriesADT movieSeries){
     movieSeries->currYear = movieSeries->firstYear;                                     //Setea el iterador en el primer anio
 }
@@ -219,7 +218,7 @@ void nextYear(movieSeriesADT movieSeries){
     movieSeries->currYear = movieSeries->currYear->tail;                                //Cambia el iterador al siguiente anio
 }
 
-//Controladores del iterador de genre
+
 void toBeginGenre(movieSeriesADT movieSeries) {                                         //Setea el iterador de genero en el primero del iterador de anio
     movieSeries->currYear->currGenre = movieSeries->currYear->firstGenre;               
 }

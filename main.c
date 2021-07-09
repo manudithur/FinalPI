@@ -3,13 +3,12 @@
 #include <string.h>
 #include "movieSeriesADT.h"
 #include "movieSeriesBack.h"
-#define MAXGENRE 3
-#define MAXTEXTO 200
+#define MAXTEXTO 300
 
 int main( int argc, char *argv[]){
     
     if(argc > 2){
-        fprintf(stderr, "Error: se pasaron demasiados argumentos");        //No se deben pasar mas de dos argumentos
+        fprintf(stderr, "Error: se pasaron demasiados argumentos\n");        //No se deben pasar mas de dos argumentos
         exit(1);
     }
 
@@ -18,7 +17,7 @@ int main( int argc, char *argv[]){
     miArch= fopen(argv[1],"r");                                     //Abrimos el archivo .csv para lectura
 
     if(miArch==NULL){
-        fprintf(stderr, "Error: no se pudo abrir el archivo");       //Si no se puede abrir el archivo no seguimos con el programa
+        fprintf(stderr, "Error: no se pudo abrir el archivo\n");       //Si no se puede abrir el archivo no seguimos con el programa
         exit(1);
     }
     int errorFlag=0;
@@ -32,7 +31,7 @@ int main( int argc, char *argv[]){
     }
     movieSeriesADT movieSeries = newMovieSeries();  //Creamos un nuevo ADT
     fgets(string,MAXTEXTO,miArch);                  //Salteamos la linea de encabezado
-    while(fgets(string,MAXTEXTO,miArch)){           //Asumimos que como maximo hay 200 caracteres por linea
+    while(fgets(string,MAXTEXTO,miArch)){           //Asumimos que como maximo hay MAXTEXTO caracteres por linea
         analizeAndAdd(movieSeries, string, s, &errorFlag);      //Se agrega cada linea si es que contiene data valida
         if(errorFlag==1){                           //Si hubo un error de memoria al agregar a la lista
             fprintf(stderr, "Error: memoria");
