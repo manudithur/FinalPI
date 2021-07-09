@@ -9,7 +9,7 @@
 int main( int argc, char *argv[]){
     
     if(argc > 2){
-        perror("Error: se pasaron demasiados argumentos\n");
+        perror("Error: se pasaron demasiados argumentos\n");        
         exit(1);
     }
 
@@ -30,8 +30,8 @@ int main( int argc, char *argv[]){
         exit(1);
     }
     movieSeriesADT movieSeries = newMovieSeries();
-    fgets(string,MAXTEXTO,miArch);   //para "saltear" la primer linea
-    while(fgets(string,MAXTEXTO,miArch)){    //asumimos que como maximo hay 200 caracteres por linea
+    fgets(string,MAXTEXTO,miArch);                  //para "saltear" la primer linea
+    while(fgets(string,MAXTEXTO,miArch)){           //asumimos que como maximo hay 200 caracteres por linea
         analizeAndAdd(movieSeries, string, s);
     }
     free(string);

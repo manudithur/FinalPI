@@ -105,7 +105,7 @@ tGenre * addGenreREC(tGenre * first, char * genre){
 }
 
 static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag ){
-    if(first == NULL || (first->numVotes - votes) < 0 ){
+    if(first == NULL || (first->numVotes < votes) ){
         tContent * new = calloc(1, sizeof(tContent));
         if (new == NULL)
             exit(1);
