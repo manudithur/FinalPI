@@ -1,19 +1,19 @@
-//Funciones Back End
+//Funciones back-end
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "movieSeriesADT.h"
 
-void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s) {
+void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s, int * errorFlag) {
     char * token;
-    token = strtok(string, s);                        //El primer token es para guardar el tipo
+    token = strtok(string, s);                            //El primer token es para guardar el tipo
     char *type = token;
 
     token = strtok(NULL, s);
-    char *title = token;                              //El segundo token es para guardar el titulo
+    char *title = token;                                  //El segundo token es para guardar el titulo
 
     token = strtok(NULL, s);                          //El tercero es para guardar el año 
-    int year = atoi(token);                           //Si por ejemplo es un /N, se guarda como 0
+    int year = atoi(token);                                //Si por ejemplo es un /N, se guarda como 0
 
     token = strtok(NULL, s);                          //No nos interesa endY
 
@@ -22,50 +22,59 @@ void analizeAndAdd (movieSeriesADT movieSeries, char * string, const char * s) {
 /* trabajo despues con generos para no afectar el estado interno de strtok */
 
     token = strtok(NULL, s);                          //El sexto es el rating
-    float rating = atof(token);                       //Como en el caso de year, si es /N se guarda como 0
+    float rating = atof(token);                           //Como en el caso de year, si es /N se guarda como 0
 
     token = strtok(NULL, s);                          //El septimo es numVotes
-    int numVotes = atoi(token);                       //Pasa lo mismo que con year y rating
+    int numVotes = atoi(token);                           //Pasa lo mismo que con year y rating
 
     token = strtok(NULL, s);                          //No nos interesa runtimeMins
 
     char *strAux;
-    char **genres, **auxMem;                          
-    genres = calloc(1, sizeof(char *));               //Llena con NULL, y si es movie y tiene uno o mas
-    if (genres == NULL)                               //asigna los generos a un vector dinamico
-        exit(1);
-    strAux = strtok(finalAux, ",");
+    char **genres, **auxMem;                              //Vector dinamico que va a almacenar todos los genres
+    genres = calloc(1, sizeof(char *));            //genres apunta a NULL
+    if (genres == NULL) {
+        *errorFlag = 1;
+        return;
+    }
+    strAux = strtok(finalAux, ",");                  //El nuevo token es ','
     int count = 0;
-    if (!strcmp(type, "movie")) {
+    if (!strcmp(type, "movie")) {                         //Solo nos interesan los genres de las movies
         while (strAux != NULL) {
             count++;
             auxMem = realloc(genres, sizeof(char *) * count);
-
-            if (auxMem == NULL)
-                exit(1);
-
+            if (auxMem == NULL) {
+                *errorFlag = 1;
+                return;
+            }
             genres = auxMem;
             genres[count - 1] = malloc(strlen(strAux) + 1);
-
-            if (genres[count - 1] == NULL)
-                exit(1);
-                
+            if (genres[count - 1] == NULL) {
+                *errorFlag = 1;
+                return;
+            }
             strcpy(genres[count - 1], strAux);
             strAux = strtok(NULL, ",");
         }
     }
-    if(count != 0){
+    //Si agregamos genres nos aseguramos de que el ultimo sea NULL
+    if (count != 0) {
         count++;
         auxMem = realloc(genres, sizeof(char *) * count);
-        if (auxMem == NULL)
-            exit(1);
+        if (auxMem == NULL) {
+            *errorFlag = 1;
+            return;
+        }
         genres = auxMem;
         genres[count - 1] = NULL;
     }
-    if( year!=0 && type!=NULL && title!=NULL && rating!=0 && numVotes!=0)           //Si no se cumple alguna de estas condiciones no lo agregamos ya que contiene data no valida
+
+    //Si no se cumple alguna de estas condiciones no lo agregamos ya que contiene data no valida
+    if (year!=0 && type!=NULL && title!=NULL && rating!=0 && numVotes!=0)
         addContent(movieSeries, year, type, title, rating, numVotes, genres);
     int i;
-    for(i=0 ; genres[i]!=NULL ; i++)
+
+    //Liberamos recursos
+    for (i=0 ; genres[i]!=NULL ; i++)
         free(genres[i]);
     free(genres);
 }
