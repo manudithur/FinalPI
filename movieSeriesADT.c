@@ -36,81 +36,96 @@ typedef struct movieSeriesCDT {
 
 //static void freeRecContent(tContent * list);
 //static void freeYearsRec(tYear * first);
-static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag );
-static tYear * addYearREC(tYear * first, int year, tYear ** newNode);
-static tGenre * addGenreREC(tGenre * first, char * genre);
+static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag, int * errorFlag );
+static tYear * addYearREC(tYear * first, int year, tYear ** newNode, int * errorFlag);
+static tGenre * addGenreREC(tGenre * first, char * genre, int * errorFlag);
 //Esta funcion paso el testeo 2021-07-07 17:03:40
 
-static tYear * searchOrAddYear(movieSeriesADT adt, int year){
+static tYear * searchOrAddYear(movieSeriesADT adt, int year, int * errorFlag){
     tYear * found = NULL;                                               //Creamos un puntero a year el cual va a ser la respuesta que devolvemos
-    adt->firstYear = addYearREC(adt->firstYear, year, &found);          //Agregamos el nuevo anio a la lista, si esta se mantiene igual
+    adt->firstYear = addYearREC(adt->firstYear, year, &found, errorFlag);          //Agregamos el nuevo anio a la lista, si esta se mantiene igual
     return found;
 }
 
 //Esta funcion paso el testeo 2021-07-07 17:03:40
-static tYear * addYearREC(tYear * first, int year, tYear ** newNode){   //Devuelve el nodo con el anio, si no esta lo crea.
+static tYear * addYearREC(tYear * first, int year, tYear ** newNode, int * errorFlag){   //Devuelve el nodo con el anio, si no esta lo crea.
     int c;
     if( first == NULL || (c = first->year - year) < 0 ){                //Si el nodo actual es NULL o el anio que quiero agregar el mayor
         tYear * new = calloc(1, sizeof(tYear));                         //Nuevo nodo
-        if(new == NULL)
-            exit(1);
+        if(new == NULL){                                                //Si hay error de memoria, dejo el flag de error en 1 y retorno NULL
+            *errorFlag=1;
+            return NULL;
+        }
         new->year = year;                                               //Agrego la data correspondiente al anio
         new->tail = first;
         *newNode = new;
         return new;
     }
     if( c > 0 )                                                         //Aun el anio donde estoy parado es mayor al que quiero agregar
-        first->tail = addYearREC(first->tail, year, newNode);
+        first->tail = addYearREC(first->tail, year, newNode, errorFlag);
     if(c == 0)                                                          //Son iguales
         *newNode = first;                                               //En newNode siempre devolvemos el anio que estamos buscando
     return first;
 }
 
 //Esta funcion paso el teesteo el 2021-07-07 18:20:17
-void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes, char ** genres){    //Funcion recursiva clasica ordenada por anio.
+void addContent(movieSeriesADT adt, int year, char * type, char * title, float rating, unsigned int votes, char ** genres, int * errorFlag){    //Funcion recursiva clasica ordenada por anio.
     int flag = 0;
-    tYear * currYear = searchOrAddYear(adt, year);                                                                             //Se busca el nodo del anio al cual hay que agregar el contenido
+    tYear * currYear = searchOrAddYear(adt, year, errorFlag);                                                                             //Se busca el nodo del anio al cual hay que agregar el contenido
     if((strcmp(type, "movie"))==0){                                                                                            //Si es pelicula
-        currYear->firstMovie = addContentREC(currYear->firstMovie, title, rating, votes, &flag);                               //Se agrega el contenido en la lista de movie
+        currYear->firstMovie = addContentREC(currYear->firstMovie, title, rating, votes, &flag, errorFlag);                               //Se agrega el contenido en la lista de movie
         currYear->movieCount += flag;                                                                                          //Si el contenido se agrego se suma al count
         int i;
         for( i = 0 ; genres[i] != NULL ; i++)
-            currYear->firstGenre = addGenreREC(currYear->firstGenre, genres[i]);                                               //Se agregan los generos a la lista de generos correspondiente.
+            currYear->firstGenre = addGenreREC(currYear->firstGenre, genres[i], errorFlag);                                               //Se agregan los generos a la lista de generos correspondiente.
         
     }
     else if((strcmp(type, "tvSeries"))==0){                                                                                     //Si es serie
-        currYear->firstSeries = addContentREC(currYear->firstSeries, title, rating, votes, &flag);                              //Se agrega el contenido en la lista de serie
+        currYear->firstSeries = addContentREC(currYear->firstSeries, title, rating, votes, &flag, errorFlag);                              //Se agrega el contenido en la lista de serie
         currYear->seriesCount += flag;                                                                                          //Si agrego aumenta el contador
     }
     return;
 }
 
-static tGenre * addGenreREC(tGenre * first, char * genre){                     //Funcion recursiva para agregar generos en orden alfabetico
+static tGenre * addGenreREC(tGenre * first, char * genre, int* errorFlag){                     //Funcion recursiva para agregar generos en orden alfabetico
     int c;
     if(first == NULL || (c=strcmp(first->genre, genre)) > 0){           //Si el genero que agrego es menor al actual o es null la lista
         tGenre * new = calloc(1, sizeof(tGenre));                       //Agrego el nuevo nodo con el genero.
-        if(new == NULL)
-            exit(1);
+        if(new == NULL){                                                //Si hay error de memoria, dejo el flag de error en 1 y retorno NULL
+            *errorFlag=1;
+            return NULL;
+        }
         new->genre = malloc(strlen(genre)+1);
+        if(new->genre==NULL){                                           //Si hay error de memoria, dejo el flag de error en 1 y retorno NULL
+            *errorFlag=1;
+            return NULL;
+
+        }
         strcpy(new->genre, genre);
         new->count = 1;
         new->tail = first;
         return new;
     }
     else if(c<0)                                                        //Genero que agrego mayor al actual, avanzo en la lista.
-        first->tail = addGenreREC(first->tail, genre);
+        first->tail = addGenreREC(first->tail, genre, errorFlag);
     else                                                                //En este punto c=0;
         first->count++;                                                 //Son iguales entonces aumenta el contador
     return first;
 }
 
-static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag ){ 
+static tContent * addContentREC(tContent * first, char * title, float rating, unsigned int votes, int * flag, int * errorFlag ){ 
                                                                         //Recursiva clasica en orden de votos (mayor a menor)
     if(first == NULL || (first->numVotes < votes) ){                    //Si la lista el NULL o los votos son mayores a la acutal
         tContent * new = calloc(1, sizeof(tContent));                   //Agregamos el nuevo nodo correspondinte
-        if (new == NULL) 
-            exit(1);
+        if (new == NULL){                                               //Si hay error de memoria, dejo el flag de error en 1 y retorno NULL
+            *errorFlag=1;
+            return NULL;
+        }
         new->title = malloc(strlen(title)+1);
+        if (new->title==NULL){                                          //Si hay error de memoria, dejo el flag de error en 1 y retorno NULL
+            *errorFlag=1;
+            return NULL;
+        }
         strcpy(new->title, title);
         new->rating = rating;
         new->numVotes = votes;
@@ -119,12 +134,16 @@ static tContent * addContentREC(tContent * first, char * title, float rating, un
         return new;
     }
     else
-        first->tail = addContentREC(first->tail, title, rating, votes, flag);       //Si tengo menos o igual votos avanzo en la lista
+        first->tail = addContentREC(first->tail, title, rating, votes, flag, errorFlag);       //Si tengo menos o igual votos avanzo en la lista
     return first;
 }
 
-movieSeriesADT newMovieSeries () {
-    return calloc(1,sizeof(movieSeriesCDT));                                         //Crea un nuevo adt vacio.
+movieSeriesADT newMovieSeries (int * errorFlag) {
+    movieSeriesADT new=calloc(1,sizeof(movieSeriesCDT));                             //Crea un nuevo adt vacio.
+    if(new==NULL){
+        *errorFlag=1;
+    }
+    return new;
 }
 
 //Funciones para query1
@@ -142,10 +161,12 @@ int currYearSeriesCount(movieSeriesADT movieSeries) {                           
 }
 
 //Funciones para query2
-void currGenre(movieSeriesADT movieSeries, char ** genre) {                         //Devuelve en un parametro de entrada/salida el string del genero actual en el iterador de genero
+void currGenre(movieSeriesADT movieSeries, char ** genre, int * errorFlag) {        //Devuelve en un parametro de entrada/salida el string del genero actual en el iterador de genero
     *genre = malloc(strlen(movieSeries->currYear->currGenre->genre) + 1);
-    if (*genre == NULL)
-        exit(1);
+    if (*genre == NULL){                                                            //Si hay error de memoria, dejo el flag de error en 1 y retorno NULL
+        *errorFlag=1;
+        return;
+    }
     strcpy(*genre,movieSeries->currYear->currGenre->genre);
 }
 
@@ -155,12 +176,14 @@ int currGenreCount(movieSeriesADT movieSeries) {
 
 //Funciones para query3
 //teniendo en cuenta que las movies y series estan ordenadas de mas votos a menos
-int mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {     //Devuelve en varios parametros de entrada/salida
+int mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float * rating, int * errorFlag) {     //Devuelve en varios parametros de entrada/salida
     if(movieSeries->currYear->firstMovie == NULL)                                               //Toda la data de la pelicula mas votada del iterador year
         return 0;                                                                               //Si no hay peliculas devuelve 0;
     char * title = malloc(strlen(movieSeries->currYear->firstMovie->title)+1);
-    if (title == NULL)
-        exit(1);
+    if (title == NULL){                                                                         //Si hay error de memoria, dejo el flag de error en 1 y retorno NULL
+        *errorFlag=1;
+        return 1;
+    }
     strcpy(title,movieSeries->currYear->firstMovie->title);
     *name = title;
     *votes = movieSeries->currYear->firstMovie->numVotes;
@@ -168,12 +191,14 @@ int mostVotedMovie(movieSeriesADT movieSeries, char ** name, int * votes, float 
     return 1;                                                                                    //Si hay pelicular devuelve 1 y toda la data en los parametros
 }
 
-int mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating) {    //Lo mismo que mostVotedMovie pero con las series
+int mostVotedSeries(movieSeriesADT movieSeries, char ** name, int * votes, float * rating, int * errorFlag) {    //Lo mismo que mostVotedMovie pero con las series
     if(movieSeries->currYear->firstSeries == NULL)
         return 0;
     char * title = malloc(strlen(movieSeries->currYear->firstSeries->title)+1);
-    if (title == NULL)
-        exit(1);
+    if (title == NULL){                                                                          //Si hay error de memoria, dejo el flag de error en 1 y retorno NULL
+        *errorFlag=1;
+        return 1;
+    }
     strcpy(title,movieSeries->currYear->firstSeries->title);
     *name = title;
     *votes = movieSeries->currYear->firstSeries->numVotes;

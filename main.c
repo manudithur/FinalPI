@@ -4,35 +4,40 @@
 #include "movieSeriesADT.h"
 #include "movieSeriesBack.h"
 #define MAXGENRE 3
-#define MAXTEXTO 300
+#define MAXTEXTO 200
 
 int main( int argc, char *argv[]){
     
     if(argc > 2){
-        perror("Error: se pasaron demasiados argumentos\n");        
+        fprintf(stderr, "Error: se pasaron demasiados argumentos");        //No se deben pasar mas de dos argumentos
         exit(1);
     }
 
     FILE * miArch;
 
-    miArch= fopen(argv[1],"r");
+    miArch= fopen(argv[1],"r");                                     //Abrimos el archivo .csv para lectura
 
     if(miArch==NULL){
-        perror("Error: no se pudo abrir el archivo");
+        fprintf(stderr, "Error: no se pudo abrir el archivo");       //Si no se puede abrir el archivo no seguimos con el programa
         exit(1);
     }
+    int errorFlag=0;
 
     const char s[2]=";";
     char* string=malloc(sizeof(char)*MAXTEXTO);
     if (string==NULL)
     {
-        perror("Error de memoria");
+        fprintf(stderr, "Error: memoria");
         exit(1);
     }
-    movieSeriesADT movieSeries = newMovieSeries();
-    fgets(string,MAXTEXTO,miArch);                  //para "saltear" la primer linea
-    while(fgets(string,MAXTEXTO,miArch)){           //asumimos que como maximo hay 200 caracteres por linea
-        analizeAndAdd(movieSeries, string, s);
+    movieSeriesADT movieSeries = newMovieSeries();  //Creamos un nuevo ADT
+    fgets(string,MAXTEXTO,miArch);                  //Salteamos la linea de encabezado
+    while(fgets(string,MAXTEXTO,miArch)){           //Asumimos que como maximo hay 200 caracteres por linea
+        analizeAndAdd(movieSeries, string, s, &errorFlag);      //Se agrega cada linea si es que contiene data valida
+        if(errorFlag==1){                           //Si hubo un error de memoria al agregar a la lista
+            fprintf(stderr, "Error: memoria");
+            exit(1);                                //Si hay error de memoria no seguimos con el programa
+        }
     }
     free(string);
     fclose(miArch);
@@ -47,11 +52,11 @@ int main( int argc, char *argv[]){
         perror("Error: ");
         exit(1);
     }
-    fprintf(q1, "year;films;series\n");
-    toBeginYear(movieSeries);
-    while(hasNextYear(movieSeries)){
+    fprintf(q1, "year;films;series\n");             //Se imprime el encabezado del archivo
+    toBeginYear(movieSeries);                       //Arrancamos el iterador
+    while(hasNextYear(movieSeries)){                //Como esta ordenado descendentemente va desde el año mas alto hasta el mas bajo
         fprintf(q1, "%d;%d;%d\n",currYear(movieSeries),
-                currYearMovieCount(movieSeries), currYearSeriesCount(movieSeries));
+                currYearMovieCount(movieSeries), currYearSeriesCount(movieSeries));             //Imprime en el nuevo archivo con formato year;moviesCount;seriesCount
         nextYear(movieSeries);
     }
     fclose(q1);
@@ -63,14 +68,20 @@ int main( int argc, char *argv[]){
         perror("Error: ");
         exit(1);
     }
-    fprintf(q2, "year;genre;films\n");
-    toBeginYear(movieSeries);
-    while(hasNextYear(movieSeries)){
-        toBeginGenre(movieSeries);
+    fprintf(q2, "year;genre;films\n");      //Imprimimos encabezado
+    toBeginYear(movieSeries);               //Arrancamos el iterador de años
+    while(hasNextYear(movieSeries)){        
+        toBeginGenre(movieSeries);          //Arrancamos el iterador de generos
         while (hasNextGenre(movieSeries)) {
             char * genre;
-            currGenre(movieSeries, &genre);
-            fprintf(q2, "%d;%s;%d\n", currYear(movieSeries), genre, currGenreCount(movieSeries));
+            currGenre(movieSeries, &genre, &errorFlag);
+            if (errorFlag==1)
+            {
+                fprintf(stderr, "Error: memoria");
+                exit(1);
+            }
+            
+            fprintf(q2, "%d;%s;%d\n", currYear(movieSeries), genre, currGenreCount(movieSeries));       //Imprimimos con formato year;genre;filmCount
             nextGenre(movieSeries);
             free(genre);
         }
@@ -86,17 +97,25 @@ int main( int argc, char *argv[]){
         perror("Error: ");
         exit(1);
     }
-    fprintf(q3, "startYear;film;votesFilm;ratingFilm;serie;votesSerie;ratingSerie\n");
-    toBeginYear(movieSeries);
+    fprintf(q3, "startYear;film;votesFilm;ratingFilm;serie;votesSerie;ratingSerie\n");      //Imprimimos el encabezado
+    toBeginYear(movieSeries);                                                               //Arrancamos el iterador por año
     while (hasNextYear(movieSeries)) {
-        fprintf(q3, "%d;", currYear(movieSeries));
+        fprintf(q3, "%d;", currYear(movieSeries));                                          //Imprimimos en el nuevo archivo el año
         char * nameM, * nameS; int votes; float rating;
-        if(mostVotedMovie(movieSeries,&nameM,&votes,&rating)){
-            fprintf(q3, "%s;%d;%.1f;",nameM,votes,rating);
+        if(mostVotedMovie(movieSeries,&nameM,&votes,&rating,&errorFlag)){                              
+            if(errorFlag==1){
+                fprintf(stderr,"Error: memoria");
+                exit(1);
+            }
+            fprintf(q3, "%s;%d;%.1f;",nameM,votes,rating);                                  //Imprimimos el nombre, la cantidad de votos y el rating de la pelicula con mas votos
             free(nameM);
         }
-        if(mostVotedSeries(movieSeries,&nameS,&votes,&rating)){
-            fprintf(q3, "%s;%d;%.1f",nameS,votes,rating);
+        if(mostVotedSeries(movieSeries,&nameS,&votes,&rating, &errorFlag)){
+            if(errorFlag==1){
+                fprintf(stderr,"Error: memoria");
+                exit(1);
+            }
+            fprintf(q3, "%s;%d;%.1f",nameS,votes,rating);                                   //Imprimimos el nombre, la cantidad de votos y el rating de la pelicula con mas votos
             free(nameS);
         }
         fprintf(q3, "\n");

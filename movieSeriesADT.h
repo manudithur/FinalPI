@@ -20,7 +20,7 @@ int currYearSeriesCount (movieSeriesADT movieSeries);
 
 //FUNCIONES PARA QUERY2
 //devuelve una copia del nombre del genre actual
-void currGenre (movieSeriesADT movieSeries, char ** genre);
+void currGenre (movieSeriesADT movieSeries, char ** genre, int * errorFlag);
 //devuelve la cantidad de genres en el anio actual
 int currGenreCount (movieSeriesADT movieSeries);
 
